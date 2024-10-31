@@ -1,22 +1,22 @@
 import os
+import numpy as np
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
-from datetime import datetime, timedelta
 
 
 class Preprocessing:
-    def __init__(self, folder_path="data", split_ratio=0.8, shift_days=1):
+    def __init__(self, folder_path="data", split_ratio=0.8, sequence_length=100):
         """
         Initialize the Preprocessing class.
 
         Parameters:
         - folder_path (str): Path to the folder where CSV data files are located.
         - split_ratio (float): Proportion of data to use as training data.
-        - shift_days (int): Number of days to shift labels for the prediction target.
+        - sequence_length (int): Number of past days to use as input features.
         """
         self.folder_path = folder_path
         self.split_ratio = split_ratio
-        self.shift_days = shift_days
+        self.sequence_length = sequence_length
         self.scaler = MinMaxScaler(feature_range=(0, 1))
 
     def load_and_combine_data(self):
@@ -36,48 +36,50 @@ class Preprocessing:
         dataset = dataset.sort_values('Date').reset_index(drop=True)
         return dataset
 
+    def create_sequences(self, data):
+        """
+        Create sequences of `sequence_length` days with the next day's data as the label.
+
+        Parameters:
+        - data (DataFrame): Scaled DataFrame of stock data.
+
+        Returns:
+        - x, y (arrays): Sequences and corresponding next-day labels.
+        """
+        x, y = [], []
+        for i in range(len(data) - self.sequence_length):
+            # Input sequence of past `sequence_length` days
+            x.append(data.iloc[i:i + self.sequence_length][['Open', 'High', 'Low', 'Close', 'Volume']].values)
+            # Label is the next day's price data
+            y.append(data.iloc[i + self.sequence_length][['Open', 'High', 'Low', 'Close', 'Volume']].values)
+
+        return np.array(x), np.array(y)
+
     def split_data(self, dataset):
         """
-        Split the dataset chronologically into training and testing sets.
+        Split the dataset chronologically into training and testing sets, then create sequences.
 
         Parameters:
         - dataset (DataFrame): The full dataset to split.
 
         Returns:
-        - x_train, x_test, y_train, y_test (DataFrames): Training and testing sets for inputs and labels.
+        - x_train, x_test, y_train, y_test (arrays): Training and testing sets for inputs and labels.
         """
         split_point = int(len(dataset) * self.split_ratio)
         train_data = dataset[:split_point]
         test_data = dataset[split_point:]
 
-        x_train = train_data[['Open', 'High', 'Low', 'Close', 'Volume']]
-        y_train = train_data[['Open', 'High', 'Low', 'Close', 'Volume']].shift(
-            -self.shift_days)  # Next day's data as labels
-        x_test = test_data[['Open', 'High', 'Low', 'Close', 'Volume']]
-        y_test = test_data[['Open', 'High', 'Low', 'Close', 'Volume']].shift(-self.shift_days)
+        # Scale the data
+        train_scaled = pd.DataFrame(self.scaler.fit_transform(train_data[['Open', 'High', 'Low', 'Close', 'Volume']]),
+                                    columns=['Open', 'High', 'Low', 'Close', 'Volume'])
+        test_scaled = pd.DataFrame(self.scaler.transform(test_data[['Open', 'High', 'Low', 'Close', 'Volume']]),
+                                   columns=['Open', 'High', 'Low', 'Close', 'Volume'])
 
-        # Drop NaN values in y_train and y_test created by shifting
-        y_train = y_train.dropna()
-        y_test = y_test.dropna()
+        # Create sequences for training and testing
+        x_train, y_train = self.create_sequences(train_scaled)
+        x_test, y_test = self.create_sequences(test_scaled)
 
         return x_train, x_test, y_train, y_test
-
-    def scale_data(self, x_train, x_test, y_train, y_test):
-        """
-        Scale the training and testing data using MinMaxScaler.
-
-        Parameters:
-        - x_train, x_test, y_train, y_test (DataFrames): Training and testing sets for inputs and labels.
-
-        Returns:
-        - x_train_scaled, x_test_scaled, y_train_scaled, y_test_scaled (arrays): Scaled data for model input.
-        """
-        x_train_scaled = self.scaler.fit_transform(x_train)
-        x_test_scaled = self.scaler.transform(x_test)
-        y_train_scaled = self.scaler.transform(y_train)
-        y_test_scaled = self.scaler.transform(y_test)
-
-        return x_train_scaled, x_test_scaled, y_train_scaled, y_test_scaled
 
     def preprocess_pipeline(self):
         """
@@ -88,6 +90,5 @@ class Preprocessing:
         """
         dataset = self.load_and_combine_data()
         x_train, x_test, y_train, y_test = self.split_data(dataset)
-        x_train_scaled, x_test_scaled, y_train_scaled, y_test_scaled = self.scale_data(x_train, x_test, y_train, y_test)
 
-        return x_train_scaled, x_test_scaled, y_train_scaled, y_test_scaled
+        return x_train, x_test, y_train, y_test
