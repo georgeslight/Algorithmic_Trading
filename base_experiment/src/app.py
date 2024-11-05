@@ -73,8 +73,32 @@ for epoch in range(num_epochs):
 
     print(f"Epoch [{epoch + 1}/{num_epochs}], Loss: {running_loss / len(train_loader):.6f}")
 
-print("Sample corresponding label (y_train):")
-print(y_train_scaled[0])  # Print the corresponding next day’s values (shape: (5,))
+##### EVALUATING THE MODEL #####
+model.eval()
+test_loss = 0.0
+predictions = []
+actuals = []
 
-print('Train: x=%s, y=%s' % (x_train_scaled.shape, y_train_scaled.shape))
-print('Test: x=%s, y=%s' % (x_test_scaled.shape, y_test_scaled.shape))
+with torch.no_grad():
+    for x_batch, y_batch in test_loader:
+        output, _ = model(x_batch)
+        loss = criterion(output, y_batch)
+        test_loss += loss.item()
+        predictions.append(output.cpu())
+        actuals.append(y_batch.cpu())
+
+print(f"Test Loss: {test_loss / len(test_loader):.4f}")
+
+# Post-processing predictions and actuals for inverse scaling
+predictions = torch.cat(predictions).numpy()
+actuals = torch.cat(actuals).numpy()
+predictions_original = pp.scaler.inverse_transform(predictions)
+actuals_original = pp.scaler.inverse_transform(actuals)
+
+for i in range(5):
+    print(f"Date: {y_test_dates[i]}")
+    prediction_str = ", ".join([f"{x:.2f}" for x in predictions_original[i]])
+    actual_str = ", ".join([f"{x:.2f}" for x in actuals_original[i]])
+    print(f"Sample prediction (original scale): {prediction_str}")
+    print(f"Actual values (original scale): {actual_str}")
+    print("-" * 50)
