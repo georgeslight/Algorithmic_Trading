@@ -41,9 +41,6 @@ test_dataset = TensorDataset(x_test_tensor, y_test_tensor)
 train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
-# Print samples from x_train and y_train
-print("Sample input sequence (x_train):")
-print(x_train_scaled[0])  # Print the first sequence (shape: (100, 5))
 ##### MODEL SETUP #####
 
 input_size = 5  # ['Open', 'High', 'Low', 'Close', 'Volume']
@@ -60,6 +57,21 @@ model = lstm(input_sz=input_size, hidden_sz=hidden_size, output_sz=output_size).
 criterion = nn.MSELoss() # todo Mean Absolute Error (MAE)
 optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
+##### TRAINING THE MODEL #####
+
+num_epochs = 50 # todo 50, 200
+for epoch in range(num_epochs):
+    model.train()
+    running_loss = 0.0
+    for x_batch, y_batch in train_loader:
+        optimizer.zero_grad()
+        outputs, _ = model(x_batch)
+        loss = criterion(outputs, y_batch)
+        loss.backward()
+        optimizer.step()
+        running_loss += loss.item()
+
+    print(f"Epoch [{epoch + 1}/{num_epochs}], Loss: {running_loss / len(train_loader):.6f}")
 
 print("Sample corresponding label (y_train):")
 print(y_train_scaled[0])  # Print the corresponding next day’s values (shape: (5,))
