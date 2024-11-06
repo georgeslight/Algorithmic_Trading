@@ -1,3 +1,4 @@
+import os
 from datetime import datetime, timedelta
 
 import pandas as pd
@@ -23,13 +24,14 @@ start_date = "2000-01-01"
 end_date = datetime.today().date() - timedelta(days=predicted_days)
 sequence_length = 100 # todo 30, 50, 100; longer sequence length provides more context but may also introduce more noise
 batch_size = 32 # todo 16, 32, 64
+data_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data")
 
 # Data collection
-data_collector = DataCollection(tickers, start_date, end_date, folder_path="data")
+data_collector = DataCollection(tickers, start_date, end_date, folder_path=data_path)
 data_collector.fetch_and_save_all()
 
 # Preprocessing
-pp = Preprocessing(folder_path="data", split_ratio=0.8, sequence_length=sequence_length)
+pp = Preprocessing(folder_path=data_path, split_ratio=0.8, sequence_length=sequence_length)
 x_train_scaled, x_test_scaled, y_train_scaled, y_test_scaled, x_train_dates, x_test_dates, y_train_dates, y_test_dates = pp.preprocess_pipeline()
 
 # Convert data to PyTorch tensors
