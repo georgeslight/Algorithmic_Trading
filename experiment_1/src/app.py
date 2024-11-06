@@ -59,7 +59,7 @@ model = lstm(input_sz=input_size, hidden_sz=hidden_size, output_sz=output_size).
 
 # Loss and optimizer
 criterion = nn.MSELoss() # todo Mean Absolute Error (MAE = L1Loss()), Mean Squared Error (MSE)
-optimizer = optim.Adam(model.parameters(), lr=learning_rate)
+optimizer = optim.Adam(model.parameters(), lr=learning_rate) # todo Adam, AdamW, Adamax, ASGD
 
 ##### TRAINING THE MODEL #####
 
