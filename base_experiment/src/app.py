@@ -1,12 +1,15 @@
 from datetime import datetime, timedelta
+
+import pandas as pd
 import torch
 import torch.nn as nn
 import torch.optim as optim
+from matplotlib import pyplot as plt
 from torch.utils.data import DataLoader, TensorDataset
 
 from data_collection import DataCollection
-from preprocessing import Preprocessing
 from lstm_stock_prediction import LSTMStockPredictor as lstm
+from preprocessing import Preprocessing
 
 # Set device
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -54,7 +57,7 @@ learning_rate = 0.001 # todo 0.001, 0.0005, 0.0001
 model = lstm(input_sz=input_size, hidden_sz=hidden_size, output_sz=output_size).to(device) # todo Bidirectional LSTM, Gated Recurrent Unit (GRU)
 
 # Loss and optimizer
-criterion = nn.MSELoss() # todo Mean Absolute Error (MAE)
+criterion = nn.MSELoss() # todo Mean Absolute Error (MAE = L1Loss()), Mean Squared Error (MSE)
 optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
 ##### TRAINING THE MODEL #####
@@ -102,3 +105,36 @@ for i in range(5):
     print(f"Sample prediction (original scale): {prediction_str}")
     print(f"Actual values (original scale): {actual_str}")
     print("-" * 50)
+
+# Generate a sample dataframe representing stock data for illustration
+# Create a DataFrame with the test dates and the original-scaled predictions and actuals
+df_results = pd.DataFrame({
+    "Date": y_test_dates,
+    "Actual_Open": actuals_original[:, 0],
+    "Predicted_Open": predictions_original[:, 0],
+    "Actual_High": actuals_original[:, 1],
+    "Predicted_High": predictions_original[:, 1],
+    "Actual_Low": actuals_original[:, 2],
+    "Predicted_Low": predictions_original[:, 2],
+    "Actual_Close": actuals_original[:, 3],
+    "Predicted_Close": predictions_original[:, 3],
+    "Actual_Volume": actuals_original[:, 4],
+    "Predicted_Volume": predictions_original[:, 4]
+})
+
+# Plotting the actual vs predicted values for Open, High, Low, Close, and Volume
+features = ["Open", "High", "Low", "Close", "Volume"]
+fig, axes = plt.subplots(len(features), 1, figsize=(12, 15), sharex=True)
+
+for i, feature in enumerate(features):
+    axes[i].plot(df_results["Date"], df_results[f"Actual_{feature}"], label=f"Actual {feature}", linestyle="-")
+    axes[i].plot(df_results["Date"], df_results[f"Predicted_{feature}"], label=f"Predicted {feature}", linestyle="--")
+    axes[i].set_title(f"{feature} Price Over Time" if feature != "Volume" else "Volume Over Time")
+    axes[i].legend()
+    axes[i].set_ylabel(feature)
+    axes[i].grid(True)
+
+# Display date on x-axis for the last subplot only
+axes[-1].set_xlabel("Date")
+fig.tight_layout()
+plt.show()
