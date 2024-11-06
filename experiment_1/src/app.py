@@ -50,7 +50,7 @@ test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 input_size = 5  # ['Open', 'High', 'Low', 'Close', 'Volume']
 hidden_size = 50  # Number of hidden units in LSTM # todo 32, 50, 64, or 128
 output_size = 5  # Predicting 5 values for the next day
-num_layers = 2  # Two LSTM layers # todo 1 to 3
+num_layers = 2  # LSTM layers # todo 1 to 3
 dropout = 0.2  # Dropout rate for regularization # todo 0.1 to 0.5
 learning_rate = 0.001 # todo 0.001, 0.0005, 0.0001
 
