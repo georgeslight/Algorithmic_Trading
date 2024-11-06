@@ -1,3 +1,0 @@
-sequence_length,batch_size,hidden_size,num_layers,dropout,learning_rate,criterion,num_epochs,epoch_loss,test_loss
-50,64,64,3,0.5,0.0005,MAE,50,0.008283,0.0497
-100,32,50,2,0.2,0.001,MSE,50,,

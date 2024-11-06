@@ -1,0 +1,9 @@
+predicted_days,sequence_length,batch_size,hidden_size,num_layers,dropout,learning_rate,criterion,optimizer,num_epochs,epoch_loss,test_loss
+1,100,32,50,2,0.2,0.001,MSE,Adam,50,0.000492,0.0067
+1,100,32,50,2,0.2,0.001,MAE,Adam,50,0.007323,0.0280
+1,50,32,50,2,0.2,0.001,MAE,Adam,50,0.007552,0.0367
+1,30,32,50,2,0.2,0.001,MAE,Adam,50,0.007353,0.0390
+7,100,32,50,2,0.2,0.001,MAE,Adam,50,0.007293,0.0267
+1,100,32,128,2,0.2,0.0001,MAE,Adam,200,0.007149,0.0345
+1,100,32,64,3,0.2,0.0005,MSE,Adam,50,0.000504,0.0049
+1,365,64,32,3,0.5,0.001,MSE,AdamW (weight_decay=0.01),50,"",""
