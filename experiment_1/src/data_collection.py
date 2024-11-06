@@ -4,7 +4,7 @@ import pandas as pd
 import yfinance as yf
 
 class DataCollection:
-    def __init__(self, tickers, start_date, end_date, interval="1d", folder_path="data"):
+    def __init__(self, tickers, start_date, end_date, interval="1d", folder_path="../data"):
         self.tickers = tickers
         self.start_date = start_date
         self.end_date = end_date
