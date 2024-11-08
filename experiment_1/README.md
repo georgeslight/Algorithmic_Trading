@@ -67,4 +67,4 @@ The results are saved in the 'outputs' directory:
 
 - **MSE vs. MAE**:
   - Although MSE configurations yielded lower numerical loss values, visual inspection of prediction plots showed that MAE configurations produced closer alignment with actual values across most stock metrics (Open, High, Low, and Close).
-  - Volume Prediction: Both MSE and MAE configurations struggled with accurately predicting Volume, with MAE showing greater variance between actual and predicted values. This suggests that MAE might not be ideal for capturing volume trends.
+  - Volume Prediction: Both MSE and MAE configurations struggled with accurately predicting Volume, with MAE showing greater variance between actual and predicted values. This might suggest that MAE may not be ideal for capturing volume trends.

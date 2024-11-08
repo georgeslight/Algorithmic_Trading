@@ -21,7 +21,7 @@ predicted_days = 1
 tickers = ["GOOGL"]
 start_date = "2000-01-01"
 end_date = datetime.today().date() - timedelta(days=predicted_days)
-sequence_length = 100 # todo 30, 50, 100; longer sequence length provides more context but may also introduce more noise
+sequence_length = 100 # todo 30, 50, 100, 365
 batch_size = 32 # todo 16, 32, 64
 data_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data")
 
@@ -59,7 +59,7 @@ model = lstm(input_sz=input_size, hidden_sz=hidden_size, output_sz=output_size).
 
 # Loss and optimizer
 criterion = nn.MSELoss() # todo Mean Absolute Error (MAE = L1Loss()), Mean Squared Error (MSE)
-optimizer = optim.Adam(model.parameters(), lr=learning_rate) # todo Adam, AdamW, Adamax, ASGD
+optimizer = optim.Adam(model.parameters(), lr=learning_rate) # todo Adam, AdamW
 
 ##### TRAINING THE MODEL #####
 
