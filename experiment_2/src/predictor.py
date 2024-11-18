@@ -1,7 +1,6 @@
 import torch
 import numpy as np
 
-
 class Predictor:
     def __init__(self, model, scaler, volume_scaler, sequence_length, device):
         """
@@ -39,7 +38,7 @@ class Predictor:
             raise ValueError("Insufficient data before the start date to form a sequence.")
 
         # Extract the initial sequence
-        initial_sequence = dataset.iloc[end_index:start_index][['Open', 'High', 'Low', 'Close', 'Volume']].values
+        initial_sequence = dataset.iloc[end_index:start_index + 1][['Open', 'High', 'Low', 'Close', 'Volume']].values
         # Scale
         current_sequence = self.scale(initial_sequence)
 
