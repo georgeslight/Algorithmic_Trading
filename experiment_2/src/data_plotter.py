@@ -5,12 +5,12 @@ class DataPlotter:
     def __init__(self):
         pass
 
-    def create_results_dataframe(self, y_test_dates, actuals_original, predictions_original):
+    def create_results_dataframe(self, dates, actuals_original, predictions_original):
         """
         Create a DataFrame with the test dates and the original-scaled predictions and actuals.
         """
         df_results = pd.DataFrame({
-            "Date": y_test_dates,
+            "Date": dates,
             "Actual_Open": actuals_original[:, 0],
             "Predicted_Open": predictions_original[:, 0],
             "Actual_High": actuals_original[:, 1],
