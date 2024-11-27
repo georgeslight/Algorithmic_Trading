@@ -7,7 +7,15 @@ class DataPlotter:
 
     def create_results_dataframe(self, dates, actuals_original, predictions_original):
         """
-        Create a DataFrame with the test dates and the original-scaled predictions and actuals.
+        Create a DataFrame with the given dates and the original-scaled predictions and actuals.
+
+        Parameters:
+        - dates (array-like): Array of dates corresponding to the given data.
+        - actuals_original (array-like): Array of actual values in the original scale.
+        - predictions_original (array-like): Array of predicted values in the original scale.
+
+        Returns:
+        - DataFrame: DataFrame containing the dates, actual values, and predicted values.
         """
         df_results = pd.DataFrame({
             "Date": dates,
@@ -24,7 +32,10 @@ class DataPlotter:
 
     def plot_results(self, df_results):
         """
-        Plot the actual vs. predicted values for Open, High, Low, Close, and Volume.
+        Plot the actual vs. predicted values for Open, High, Low, and Close prices.
+
+        Parameters:
+        - df_results (DataFrame): DataFrame containing the dates, actual values, and predicted values.
         """
         features = ["Open", "High", "Low", "Close"]
         fig, axes = plt.subplots(len(features), 1, figsize=(12, 15), sharex=True)
