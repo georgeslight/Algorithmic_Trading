@@ -5,48 +5,42 @@ from sklearn.preprocessing import MinMaxScaler
 
 
 class Preprocessing:
-    def __init__(self, folder_path="data", split_ratio=0.8, sequence_length=100):
+    def __init__(self, folder_path, split_ratio, sequence_length):
         """
-        Initialize the Preprocessing class.
-
         Parameters:
-        - folder_path (str): Path to the folder where CSV data files are located.
-        - split_ratio (float): Proportion of data to use as training data.
-        - sequence_length (int): Number of past days to use as input features.
+        - folder_path (str): Path to the folder containing CSV data files.
+        - split_ratio (float): Proportion of data to use for training.
+        - sequence_length (int): Number of past days to use as input features..
         """
         self.folder_path = folder_path
         self.split_ratio = split_ratio
         self.sequence_length = sequence_length
         self.scaler = MinMaxScaler(feature_range=(0, 1))
-        # self.volume_scaler = MinMaxScaler(feature_range=(0, 1))
 
     def load_data(self):
         """
-        Load and combine all CSV files in the folder into a single DataFrame.
+        Load and sort the dataset from the specified folder path.
 
         Returns:
-        - DataFrame: Combined data from all CSV files.
+        - dataset (DataFrame): Loaded and sorted dataset.
         """
-        all_data = []
-        for file in os.listdir(self.folder_path):
-            if file.endswith('.csv'):
-                ticker_data = pd.read_csv(os.path.join(self.folder_path, file))
-                all_data.append(ticker_data)
-        dataset = pd.concat(all_data, ignore_index=True)
+        file = os.listdir(self.folder_path)
+        dataset = pd.read_csv(os.path.join(self.folder_path, file[0]))
         dataset['Date'] = pd.to_datetime(dataset['Date']).dt.date
         dataset = dataset.sort_values('Date').reset_index(drop=True)
         return dataset
 
     def create_sequences_multi_input(self, data):
         """
-        Create sequences of `sequence_length` days with the next day's 'Close' value as the label.
+        Create sequences of `sequence_length` days with the next day's parameters as the label.
 
         Parameters:
         - data (DataFrame): Scaled DataFrame of stock data.
 
         Returns:
-        - x_open, x_high, x_low, x_close, x_volume (arrays): Sequences for each feature.
-        - y (array): Corresponding 'Close' values as labels.
+        - x_open, x_high, x_low, x_close (arrays): Sequences for each feature.
+        - y (array): Corresponding next day's parameters as labels.
+        - y_dates (array): Dates corresponding to the labels.
         """
         x_open, x_high, x_low, x_close, x_volume, y = [], [], [], [], [], []
         y_dates = []
@@ -56,11 +50,10 @@ class Preprocessing:
             x_high.append(data.iloc[i:i + self.sequence_length]['High'].values)
             x_low.append(data.iloc[i:i + self.sequence_length]['Low'].values)
             x_close.append(data.iloc[i:i + self.sequence_length]['Close'].values)
-            # x_volume.append(data.iloc[i:i + self.sequence_length]['Volume'].values)
+
             # Label is the next day's 'Close' price
             y.append(np.array(data.iloc[i + self.sequence_length][['Open', 'High', 'Low', 'Close']].values, dtype=float))
             y_dates.append(data['Date'].iloc[i + self.sequence_length])
-
         return (
             np.array(x_open), np.array(x_high), np.array(x_low), np.array(x_close), np.array(y), np.array(y_dates)
         )
@@ -82,7 +75,7 @@ class Preprocessing:
 
     def scale_data(self, train_data, test_data):
         """
-        Scale the training and testing datasets.
+        Scale the training and testing datasets using MinMaxScaler.
 
         Parameters:
         - train_data (DataFrame): Unscaled training dataset.
@@ -101,20 +94,6 @@ class Preprocessing:
             columns=test_data.iloc[:, 1:5].columns
         )
 
-        # # Scale Volume separately
-        # vol_train_scaled = pd.DataFrame(
-        #     self.volume_scaler.fit_transform(train_data.iloc[:, [5]].values),
-        #     columns=train_data.iloc[:, [5]].columns
-        # )
-        # vol_test_scaled = pd.DataFrame(
-        #     self.volume_scaler.transform(test_data.iloc[:, [5]].values),
-        #     columns=test_data.iloc[:, [5]].columns
-        # )
-
-        # # Add Volume column to scaled DataFrame
-        # train_scaled['Volume'] = vol_train_scaled['Volume']
-        # test_scaled['Volume'] = vol_test_scaled['Volume']
-
         # Add Date column to scaled DataFrame
         train_scaled.insert(loc=0, column='Date', value=train_data['Date'].values)
         test_scaled.insert(loc=0, column='Date', value=test_data['Date'].values)
@@ -123,12 +102,15 @@ class Preprocessing:
 
     def preprocess_pipeline(self):
         """
-        Full preprocessing pipeline that loads, combines, splits, and scales data.
+        Execute the full preprocessing pipeline: load, split, scale, and create sequences.
 
         Returns:
-        - x_open_train, x_high_train, x_low_train, x_close_train, x_volume_train (arrays): Training input sequences.
-        - x_open_test, x_high_test, x_low_test, x_close_test, x_volume_test (arrays): Testing input sequences.
-        - y_train, y_test (arrays): Training and testing labels.
+        - x_open_train, x_high_train, x_low_train, x_close_train (arrays): Training input sequences.
+        - y_train (array): Training labels.
+        - y_train_dates (array): Dates corresponding to the training labels.
+        - x_open_test, x_high_test, x_low_test, x_close_test (arrays): Testing input sequences.
+        - y_test (array): Testing labels.
+        - ly_test_dates (array): Dates corresponding to the testing labels.
         """
         dataset = self.load_data()
 
