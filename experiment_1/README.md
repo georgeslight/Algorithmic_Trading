@@ -49,21 +49,21 @@ The results are saved in the 'outputs' directory:
 - **Initial Best Configuration**:
   - Looking at the loss values, the first configuration achieved the best initial results for epoch and test loss, with an epoch loss of 0.000492 and test loss of 0.0067. This configuration provided a baseline understanding of model performance.
 
-| plot_id | sequence_length | batch_size | hidden_size | num_layers | dropout | learning_rate | criterion | optimizer | num_epochs | epoch_loss | test_loss |
-|---------|-----------------|------------|-------------|------------|---------|---------------|-----------|-----------|------------|------------|-----------|
-| 1       | 100             | 32         | 50          | 2          | 0.2     | 0.001         | MSE       | Adam      | 50         | 0.000492   | 0.0067    |
+| plot_id | sequence_length | batch_size | hidden_size | learning_rate | criterion | optimizer | num_epochs | epoch_loss | test_loss |
+|---------|-----------------|------------|-------------|---------------|-----------|-----------|------------|------------|-----------|
+| 1       | 100             | 32         | 50          | 0.001         | MSE       | Adam      | 50         | 0.000492   | 0.0067    |
 
 - **Overfitting and Best Overall Configuration**:
   - Despite the promising results from configuration 7, this setup demonstrated signs of overfitting, as the significant drop in test loss did not align with consistent prediction accuracy across the dataset.
 
-| plot_id | sequence_length | batch_size | hidden_size | num_layers | dropout | learning_rate | criterion | optimizer                      | num_epochs | epoch_loss | test_loss |
-|---------|-----------------|------------|-------------|------------|---------|---------------|-----------|--------------------------------|------------|------------|-----------|
-| 7       | 365             | 64         | 32          | 3          | 0.5     | 0.001         | MSE       | AdamW (with weight_decay=0.01) | 50         | 0.000345   | 0.0239    |
+| plot_id | sequence_length | batch_size | hidden_size | learning_rate | criterion | optimizer                      | num_epochs | epoch_loss | test_loss |
+|---------|-----------------|------------|-------------|---------------|-----------|--------------------------------|------------|------------|-----------|
+| 7       | 365             | 64         | 32          | 0.001         | MSE       | AdamW (with weight_decay=0.01) | 50         | 0.000345   | 0.0239    |
 
 - **Best Balanced Configuration**
   - This configuration provided a better balance between underfitting and overfitting, delivering consistent predictions and maintaining low loss metrics across the board. It was found to be the most effective for achieving reliable, real-world predictions.
 
-| plot_id | sequence_length | batch_size | hidden_size | num_layers | dropout | learning_rate | criterion | optimizer | num_epochs | epoch_loss | test_loss |
-|---------|-----------------|------------|-------------|------------|---------|---------------|-----------|-----------|------------|------------|-----------|
-| 13      | 100             | 32         | 128         | 2          | 0.2     | 0.0001        | MSE       | Adam      | 200        | 0.000478   | 0.0025    |
+| plot_id | sequence_length | batch_size | hidden_size | learning_rate | criterion | optimizer | num_epochs | epoch_loss | test_loss |
+|---------|-----------------|------------|-------------|---------------|-----------|-----------|------------|------------|-----------|
+| 13      | 100             | 32         | 128         | 0.0001        | MSE       | Adam      | 200        | 0.000478   | 0.0025    |
 
