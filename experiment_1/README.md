@@ -67,3 +67,5 @@ The results are saved in the 'outputs' directory:
 |---------|-----------------|------------|-------------|---------------|-----------|-----------|------------|------------|-----------|
 | 13      | 100             | 32         | 128         | 0.0001        | MSE       | Adam      | 200        | 0.000478   | 0.0025    |
 
+- **Feature Scaling and Variance**
+  - A notable discrepancy was observed in the variance of the Volume feature during evaluation, which consistently demonstrated much lower variance compared to the other features. While this issue may be attributed to the use of MinMax scaling—compressing the range of features to [0, 1] and disproportionately reducing the variance of the significantly larger Volume values—it is also possible that the behavior arises from intrinsic properties of the data or the model's treatment of this feature. To address this imbalance and investigate its origins, future experiments should explore alternative scaling methods.
