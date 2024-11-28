@@ -1,44 +1,44 @@
 # Experiment 1
 
 ## Short Description
-This experiment utilizes a Long Short-Term Memory (LSTM) model to predict stock prices one day ahead based on historical OHLCV (Open, High, Low, Close, Volume) data. 
-Multiple configurations are tested to identify an optimal setup for minimizing prediction error.
+Using a simple LSTM model to predict the next day's stock prices (Open, High, Low, Close, Volume) for a given stock.
 
 ## Data Acquisition
-- Data source: Historical daily stock data from yfinance (Yahoo Finance) for the ticker "GOOGL".
-- Data Range: 2000-01-01 to the current date, excluding the predicted day.
-- Target: The experiment uses OHLCV data from past stock metrics to predict the OHLCV for the next day.
-
+Daily stock prices for Google (GOOGL) from 2000-01-01 to the present day. The data is split into training and testing sets with an 80-20 split.
 
 ## Features
-The following features are calculated and normalized as input for the LSTM model:
-- **OHLCV**: 'Open', 'High', 'Low', 'Close', 'Volume'.
-- Each sequence consists of data from the past 30, 50, 100, or 365 days, depending on the configuration.
+
+The following features are used for each stock:  
+- Open price
+- High price
+- Low price
+- Close price
+- Volume
+- 
+These features are normalized over the last 30, 50, 100, or 365 days, depending on the configuration.
 
 ## Target
-Predict the values of 'Open', 'High', 'Low', 'Close', and 'Volume' for the next day.
+The target is to predict the next day's stock prices (Open, High, Low, Close, Volume
 
 ## Modeling Architecture
 - **LSTM Architecture** model with configurations varied across hyperparameters:
   - Input size: 5 (OHLCV)
   - Hidden size: Tested values include 32, 50, 64, and 128
   - Number of layers: Configurations range from 2 to 3 layers
-  - Dropout: 0.2 or 0.5
   - Sequence Length: Configurations tested include 30, 50, 100, and 365 days
   - Optimizer: Adam and AdamW optimizers with optional weight decay
   - Loss Function: Both Mean Squared Error (MSE) and Mean Absolute Error (MAE) were tested
  
 ## Performance Criteria
-Performance is evaluated based on the following metrics:
-- Epoch Loss: Average loss over each training epoch.
-- Test Loss: Average loss over the test set.
+Mean Squared Error (MSE) or Mean Absolute Error (MAE) of true vs. predicted stock prices for the test data.
 
 ## Baseline
-Comparison between Mean Squared Error (MSE) and Mean Absolute Error (MAE) as loss functions:
-- **MSE**: Generally yields lower epoch and test loss values, indicating effective minimization of error during training.
-- **MAE**: Provides closer alignment with actual values across most stock metrics (Open, High, Low, and Close) when analyzing the plots, despite showing slightly higher loss values. Both metrics, however, struggled with accurately predicting volume trends.
+The baseline for this experiment is the Mean Squared Error (MSE) and Mean Absolute Error (MAE) of the true stock prices compared to the average stock prices over the training period for the test data. This provides a reference point to evaluate the performance of the LSTM model.
 
 ## Results
+
+In this experiment, we explored the use of a simple LSTM model to predict the next day's stock prices for Google (GOOGL). Various configurations of the LSTM model were tested, and their performance was evaluated using Mean Squared Error (MSE) and Mean Absolute Error (MAE) as loss functions. The results indicated that while the LSTM model could capture some trends in the stock prices, further improvements and more complex models may be needed to achieve better predictions. The findings from this experiment provide a foundation for future work in developing more accurate stock price prediction models.
+
 The results are saved in the 'outputs' directory:
 - 'results.csv': Contains details of each configuration tested, including hyperparameters, epoch loss, and test loss for each setup.
 - Plots Directory: Each experiment’s actual vs. predicted results are visualized in the outputs/plots/ directory. Plot files are named based on the plot_id column in results.csv. For instance, results_1.png corresponds to the tuple with 'plot_id = 1' in the CSV file.
@@ -65,6 +65,3 @@ The results are saved in the 'outputs' directory:
 |---------|-----------------|------------|-------------|------------|---------|---------------|-----------|-----------|------------|------------|-----------|
 | 13      | 100             | 32         | 128         | 2          | 0.2     | 0.0001        | MSE       | Adam      | 200        | 0.000478   | 0.0025    |
 
-- **MSE vs. MAE**:
-  - Although MSE configurations yielded lower numerical loss values, visual inspection of prediction plots showed that MAE configurations produced closer alignment with actual values across most stock metrics (Open, High, Low, and Close).
-  - Volume Prediction: Both MSE and MAE configurations struggled with accurately predicting Volume, with MAE showing greater variance between actual and predicted values. This might suggest that MAE may not be ideal for capturing volume trends.
