@@ -33,10 +33,8 @@ The target is to predict the next day's stock prices (Open, High, Low, Close, Vo
   - Loss Function: Mean Squared Error (MSE)
   - The model was trained with 50 epochs.
 
-These base configurations were carried over from Experiment 1 due to their strong performance in terms of both epoch and test loss. The model was trained to predict the next day's stock prices (Open, High, Low, Close, Volume) using the LSTM architecture.
- 
 ## Performance Criteria
-The model's performance was evaluated by comparing the Mean Squared Error (MSE) of the predicted values with the Variance of the actual values for each feature (Open, High, Low, Close, Volume). A lower MSE than the Variance indicates the model outperforms a mean-based prediction for that feature.
+Evaluated by comparing the Mean Squared Error (MSE) of the predicted values with the Variance of the actual values for each feature (Open, High, Low, Close, Volume).
 
 ## Baseline
 The Mean Squared Error (MSE) of the predicted stock prices is compared with the Variance of the actual stock prices for each feature. This provides a reference point to determine if the model outperforms a simple mean-based prediction. A feature is considered well-predicted if its MSE is lower than its Variance.
