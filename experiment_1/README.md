@@ -39,9 +39,37 @@ The baseline for this experiment is the Mean Squared Error (MSE) and Mean Absolu
 
 ## Results
 
-In this experiment, we explored the use of a simple LSTM model to predict the next day's stock prices for Google (GOOGL). Various configurations of the LSTM model were tested, and their performance was evaluated using Mean Squared Error (MSE) and Mean Absolute Error (MAE) as loss functions. The results indicated that while the LSTM model could capture some trends in the stock prices, further improvements and more complex models may be needed to achieve better predictions. The findings from this experiment provide a foundation for future work in developing more accurate stock price prediction models.
+#### Overall Test Loss
 
-The results are saved in the 'outputs' directory:
+ - Test Loss: 0.00120
+
+#### Comparison of MSE and Variance for Each Feature
+
+  - Open: MSE = 0.03589, Variance = 0.10168 
+  
+    The model performs better than a mean-based prediction for Open.
+
+  - High: MSE = 0.05428, Variance = 0.09563
+    
+    The model performs better than a mean-based prediction for High.
+
+  - Low: MSE = 0.03833, Variance = 0.10446
+    
+    The model performs better than a mean-based prediction for Low.
+
+  - Close: MSE = 0.05300, Variance = 0.10110
+
+    The model performs better than a mean-based prediction for Close.
+
+  - Volume: MSE = 0.00498, Variance = 0.00157
+    
+    The model does not outperform a mean-based prediction for Volume.
+
+These results indicate that the model performs well for predicting the 'Open', 'High', 'Low', and 'Close' prices, but it does not perform as well for predicting the 'Volume' feature.
+
+##### Detailed Results
+
+The results for different configurations are saved in the 'outputs' directory:
 - 'results.csv': Contains details of each configuration tested, including hyperparameters, epoch loss, and test loss for each setup.
 - Plots Directory: Each experiment’s actual vs. predicted results are visualized in the outputs/plots/ directory. Plot files are named based on the plot_id column in results.csv. For instance, results_1.png corresponds to the tuple with 'plot_id = 1' in the CSV file.
 
