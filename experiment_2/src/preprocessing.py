@@ -5,7 +5,7 @@ from sklearn.preprocessing import MinMaxScaler
 
 
 class Preprocessing:
-    def __init__(self, folder_path="data", split_ratio=0.8, sequence_length=100):
+    def __init__(self, folder_path: str, split_ratio: float, sequence_length: int):
         """
         Initialize the Preprocessing class.
 
@@ -22,17 +22,13 @@ class Preprocessing:
 
     def load_data(self):
         """
-        Load and combine all CSV files in the folder into a single DataFrame.
+        Load and sort the dataset from the specified folder path.
 
         Returns:
-        - DataFrame: Combined data from all CSV files.
+        - dataset (DataFrame): Loaded and sorted dataset.
         """
-        all_data = []
-        for file in os.listdir(self.folder_path):
-            if file.endswith('.csv'):
-                ticker_data = pd.read_csv(os.path.join(self.folder_path, file))
-                all_data.append(ticker_data)
-        dataset = pd.concat(all_data, ignore_index=True)
+        file = os.listdir(self.folder_path)
+        dataset = pd.read_csv(os.path.join(self.folder_path, file[0]))
         dataset['Date'] = pd.to_datetime(dataset['Date']).dt.date
         dataset = dataset.sort_values('Date').reset_index(drop=True)
         return dataset
@@ -45,19 +41,22 @@ class Preprocessing:
         - data (DataFrame): Scaled DataFrame of stock data.
 
         Returns:
-        - x, y (arrays): Sequences and corresponding next-day labels.
+        - x (array): Sequences of past `sequence_length` days.
+        - y (array): Corresponding next day's data as labels.
+        - x_dates (array): Dates for the input sequences.
+        - y_dates (array): Dates for the labels.
         """
         x, y = [], []
         x_dates, y_dates = [], []  # To store dates for input and label
         for i in range(len(data) - self.sequence_length):
             # Input sequence of past `sequence_length` days
-            x.append(np.array(data.iloc[i:i + self.sequence_length][['Open', 'High', 'Low', 'Close', 'Volume']].values, dtype=float))
-            x_dates.append(data['Date'].iloc[i:i + self.sequence_length].values)  # Store dates for the input sequence
+            x.append(data.iloc[i:i + self.sequence_length][['Open', 'High', 'Low', 'Close', 'Volume']].values)
+            x_dates.append(data.iloc[i:i + self.sequence_length]['Date'].values)  # Store dates for the input sequence
             # Label is the next day's price data
-            y.append(np.array(data.iloc[i + self.sequence_length][['Open', 'High', 'Low', 'Close', 'Volume']].values, dtype=float))
-            y_dates.append(data['Date'].iloc[i + self.sequence_length])  # Store date for the label
+            y.append(data.iloc[i + self.sequence_length][['Open', 'High', 'Low', 'Close', 'Volume']].values)
+            y_dates.append(data.iloc[i + self.sequence_length]['Date'])  # Store date for the label
 
-        return np.array(x), np.array(y), np.array(x_dates), np.array(y_dates)
+        return np.array(x, dtype=np.float32), np.array(y, dtype=np.float32), np.array(x_dates), np.array(y_dates)
 
     def split_data(self, dataset):
         """
@@ -67,7 +66,8 @@ class Preprocessing:
         - dataset (DataFrame): The full dataset to split.
 
         Returns:
-        - train_data, test_data (DataFrames): Unscaled training and testing datasets.
+        - train_data (DataFrame): Unscaled training dataset.
+        - test_data (DataFrame): Unscaled testing dataset.
         """
         split_point = int(len(dataset) * self.split_ratio)
         train_data = dataset[:split_point]
@@ -76,14 +76,19 @@ class Preprocessing:
 
     def scale_data(self, train_data, test_data):
         """
-        Scale the training and testing datasets.
+        Scale the training and testing datasets using MinMaxScaler.
+
+        In this experiment, the 'Open', 'High', 'Low', and 'Close' columns are scaled together,
+        while the 'Volume' column is scaled separately. This differs from experiment_1 where
+        all columns were scaled together.
 
         Parameters:
         - train_data (DataFrame): Unscaled training dataset.
         - test_data (DataFrame): Unscaled testing dataset.
 
         Returns:
-        - train_scaled, test_scaled (DataFrames): Scaled training and testing datasets with additional columns.
+        - train_scaled (DataFrame): Scaled training dataset with additional columns.
+        - test_scaled (DataFrame): Scaled testing dataset with additional columns.
         """
         # Scale Open, High, Low, Close
         train_scaled = pd.DataFrame(
@@ -115,13 +120,19 @@ class Preprocessing:
 
         return train_scaled, test_scaled
 
-
     def preprocess_pipeline(self):
         """
-        Full preprocessing pipeline that loads, combines, splits, and scales data.
+        Execute the full preprocessing pipeline: load, split, scale, and create sequences.
 
         Returns:
-        - x_train_scaled, x_test_scaled, y_train_scaled, y_test_scaled (arrays): Preprocessed and scaled data.
+        - x_train (array): Training input sequences.
+        - x_test (array): Testing input sequences.
+        - y_train (array): Training labels.
+        - y_test (array): Testing labels.
+        - x_train_dates (array): Dates for the training input sequences.
+        - x_test_dates (array): Dates for the testing input sequences.
+        - y_train_dates (array): Dates for the training labels.
+        - y_test_dates (array): Dates for the testing labels.
         """
         dataset = self.load_data()
 
@@ -131,8 +142,8 @@ class Preprocessing:
         # Scale data
         train_scaled, test_scaled = self.scale_data(train_data, test_data)
 
-        #Split data
+        # Create sequences for multi-input LSTM
         x_train, y_train, x_train_dates, y_train_dates = self.create_sequences(train_scaled)
-        x_test, y_test, x_test_dates, y_train_dates = self.create_sequences(test_scaled)
+        x_test, y_test, x_test_dates, y_test_dates = self.create_sequences(test_scaled)
 
-        return x_train, x_test, y_train, y_test, x_train_dates, x_test_dates, y_train_dates, y_train_dates
+        return x_train, x_test, y_train, y_test, x_train_dates, x_test_dates, y_train_dates, y_test_dates
