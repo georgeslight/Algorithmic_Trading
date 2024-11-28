@@ -1,8 +1,7 @@
 # Experiment 2
 
 ## Short Description
-Using a simple LSTM model to predict the next day's stock prices (Open, High, Low, Close, Volume) for a given stock. In this experiment, a distinct scaling method 
-
+Using a simple LSTM model to predict the next day's stock prices (Open, High, Low, Close, Volume) for a given stock. In this experiment, a distinct scaling method was applied, where the Volume feature was scaled independently of the other features to address variance imbalances observed in Experiment 1.
 ## Data Acquisition
 Daily stock prices for Google (GOOGL) from 2000-01-01 to the present day. The data is split into training and testing sets with an 80-20 split.
 
@@ -34,7 +33,7 @@ The target is to predict the next day's stock prices (Open, High, Low, Close, Vo
   - The model was trained with 50 epochs.
 
 ## Performance Criteria
-Evaluated by comparing the Mean Squared Error (MSE) of the predicted values with the Variance of the actual values for each feature (Open, High, Low, Close, Volume).
+The model's performance was evaluated by comparing the Mean Squared Error (MSE) of the predicted values with the Variance of the actual values for each feature. A lower MSE than the Variance indicates the model outperforms a mean-based prediction for that feature, reflecting its ability to capture the variability in the data effectively.
 
 ## Baseline
 The Mean Squared Error (MSE) of the predicted stock prices is compared with the Variance of the actual stock prices for each feature. This provides a reference point to determine if the model outperforms a simple mean-based prediction. A feature is considered well-predicted if its MSE is lower than its Variance.
@@ -69,4 +68,4 @@ The performance of the model was evaluated by comparing the Mean Squared Error (
     The model does not outperform a mean-based prediction for Volume.
 
 #### Interpretation
-These findings indicate that further enhancements, such as improved feature scaling methods, adjustments to the model architecture, or more advanced data preprocessing techniques, may be necessary to achieve better performance for these features. While scaling the Volume feature separately in the 0-1 range using a different scaler was intended to address variance imbalances, it did not yield better results for Volume. Moreover, it led to worse predictions for the Low and Close features. This outcome suggests that scaling features independently might disrupt the relationships between them, particularly in time-series data where feature interdependence is critical. Future experiments should explore alternative scaling techniques that preserve these relationships while addressing variance discrepancies.
+These findings indicate that further enhancements may be necessary to achieve better performance for these features. While scaling the Volume feature separately in the 0-1 range using a different scaler was intended to address variance imbalances, it did not yield better results for Volume. Moreover, it led to worse predictions for the Low and Close features. This outcome suggests that scaling features independently might disrupt the relationships between them, particularly in time-series data where feature interdependence is critical.
