@@ -14,7 +14,7 @@ The following features are used for each stock:
 - Low price
 - Close price
 - Volume
-- 
+
 These features are normalized over the last 30, 50, 100, or 365 days, depending on the configuration.
 
 ## Target
