@@ -39,11 +39,11 @@ The baseline for this experiment is the Mean Squared Error (MSE) and Mean Absolu
 
 ## Results
 
-#### Overall Test Loss
+### Overall Test Loss
 
  - Test Loss: 0.00120
 
-#### Comparison of MSE and Variance for Each Feature
+### Comparison of MSE and Variance for Each Feature
 
   - Open: MSE = 0.03589, Variance = 0.10168 
   
@@ -67,13 +67,13 @@ The baseline for this experiment is the Mean Squared Error (MSE) and Mean Absolu
 
 These results indicate that the model performs well for predicting the 'Open', 'High', 'Low', and 'Close' prices, but it does not perform as well for predicting the 'Volume' feature.
 
-##### Detailed Results
+#### Detailed Results
 
 The results for different configurations are saved in the 'outputs' directory:
 - 'results.csv': Contains details of each configuration tested, including hyperparameters, epoch loss, and test loss for each setup.
 - Plots Directory: Each experiment’s actual vs. predicted results are visualized in the outputs/plots/ directory. Plot files are named based on the plot_id column in results.csv. For instance, results_1.png corresponds to the tuple with 'plot_id = 1' in the CSV file.
 
-## Key Findings
+### Key Findings
 - **Initial Best Configuration**:
   - Looking at the loss values, the first configuration achieved the best initial results for epoch and test loss, with an epoch loss of 0.000492 and test loss of 0.0067. This configuration provided a baseline understanding of model performance.
 
