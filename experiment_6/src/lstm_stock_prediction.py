@@ -4,7 +4,7 @@ import math
 
 
 class LSTMStockPredictor(nn.Module):
-    def __init__(self, input_sz: int, hidden_sz: int, output_sz: int):
+    def __init__(self, input_size: int, hidden_size: int, output_sz: int):
         """
         Custom LSTM model for stock prediction.
 
@@ -14,17 +14,17 @@ class LSTMStockPredictor(nn.Module):
         - output_sz (int): Number of output features (e.g., 5 for predicting the next day's prices).
         """
         super().__init__()
-        self.input_size = input_sz
-        self.hidden_size = hidden_sz
+        self.input_size = input_size
+        self.hidden_size = hidden_size
         self.output_size = output_sz
 
         # LSTM cell parameters; Setup
-        self.W = nn.Parameter(torch.Tensor(input_sz, hidden_sz * 4)) #  A weight matrix for the input x_t, with dimensions (input_size, hidden_size * 4). LSTMs have 4 gate components, so the hidden size is multiplied by 4.
-        self.U = nn.Parameter(torch.Tensor(hidden_sz, hidden_sz * 4)) # A weight matrix for the previous hidden state h_t, with dimensions (hidden_size, hidden_size * 4).
-        self.bias = nn.Parameter(torch.Tensor(hidden_sz * 4)) # A bias term for the gates, also with size (hidden_size * 4)
+        self.W = nn.Parameter(torch.Tensor(input_size, hidden_size * 4)) #  A weight matrix for the input x_t, with dimensions (input_size, hidden_size * 4). LSTMs have 4 gate components, so the hidden size is multiplied by 4.
+        self.U = nn.Parameter(torch.Tensor(hidden_size, hidden_size * 4)) # A weight matrix for the previous hidden state h_t, with dimensions (hidden_size, hidden_size * 4).
+        self.bias = nn.Parameter(torch.Tensor(hidden_size * 4)) # A bias term for the gates, also with size (hidden_size * 4)
 
         # Fully connected layer to map the hidden state to the output
-        self.fc = nn.Linear(hidden_sz, output_sz)
+        self.fc = nn.Linear(hidden_size, output_sz)
 
         # Initialize weights
         self.init_weights()
