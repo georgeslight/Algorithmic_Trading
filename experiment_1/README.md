@@ -18,16 +18,18 @@ The following features are used for each stock:
 These features are normalized over the last 30, 50, 100, or 365 days, depending on the configuration.
 
 ## Target
-The target is to predict the next day's stock prices (Open, High, Low, Close, Volume
+The target is to predict the next day's stock prices (Open, High, Low, Close, Volume)
 
 ## Modeling Architecture
 - **LSTM Architecture** model with configurations varied across hyperparameters:
   - Input size: 5 (OHLCV)
   - Hidden size: Tested values include 32, 50, 64, and 128
-  - Number of layers: Configurations range from 2 to 3 layers
   - Sequence Length: Configurations tested include 30, 50, 100, and 365 days
+  - Batch Size: Tested values include 32 and 64
+  - Learning Rate: Tested values include 0.001 and 0.0001
   - Optimizer: Adam and AdamW optimizers with optional weight decay
   - Loss Function: Both Mean Squared Error (MSE) and Mean Absolute Error (MAE) were tested
+  - The model was trained with 50 to 200 epochs, depending on the configuration
  
 ## Performance Criteria
 Mean Squared Error (MSE) or Mean Absolute Error (MAE) of true vs. predicted stock prices for the test data.
