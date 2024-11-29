@@ -15,7 +15,7 @@ The project includes multiple experiments, each designed to test a specific hypo
     - The model outperformed a mean-based baseline for most features except Volume.
     - Variance in the Volume feature posed challenges, possibly due to the scaling method.
 - **Best Configuration:** Sequence length of 100 days, hidden size of 128, MSE loss, Adam optimizer, learning rate of 0.0001.
-- **Overall Test Loss:** 0.0025.
+- **Overall Test Loss:** 0.0025
 
 ### Experiment 2: LSTM with Independent Volume Scaling
 
@@ -23,7 +23,7 @@ The project includes multiple experiments, each designed to test a specific hypo
 - **Key Findings:**
     - The Volume predictions did not improve significantly.
     - Independent scaling disrupted interdependencies among features, leading to worse predictions for the Low and Close prices.
-- **Overall Test Loss:** 0.00279.
+- **Overall Test Loss:** 0.00279
 
 ### Experiment 3: Multi-Input LSTM
 
@@ -32,7 +32,7 @@ The project includes multiple experiments, each designed to test a specific hypo
     - The model failed to capture inter-feature dependencies, resulting in poor performance across all features.
     - Complexity of the architecture likely contributed to overfitting.
     - The configuration used may have led to a highly decoupled representation of the features, disrupting the natural relationships essential for accurate stock price predictions.
-- **Overall Test Loss:** 0.13976.
+- **Overall Test Loss:** 0.13976
 
 ### Experiment 4: Bidirectional LSTM with Attention Mechanism
 
@@ -40,7 +40,7 @@ The project includes multiple experiments, each designed to test a specific hypo
 - **Key Findings:**
     - The model failed to outperform the baseline for the 'Close' price.
     - Possible causes include overfitting, errors in model configuration, and challenges in integrating the attention mechanism effectively.
-- **Overall Test Loss:** 1.54351.
+- **Overall Test Loss:** 0.31830
 
 ## Overall Insights and Conclusions
 
