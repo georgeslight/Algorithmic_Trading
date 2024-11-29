@@ -3,7 +3,7 @@
 
 This project explores various machine learning models based on Long Short-Term Memory (LSTM) networks for predicting daily stock prices. The primary objective is to develop models capable of forecasting key stock metrics—Open, High, Low, Close, and Volume—for the next day using historical data. By testing different architectures, scaling methods, and configurations, the project seeks to identify the best approaches for improving prediction accuracy across stock features.
 
-The dataset used in this project consists of historical stock prices for Google (GOOGL) spanning from 2000-01-01 to the present, fetched using the yfinance library. The data includes the following features: Open, High, Low, Close, and Volume (OHLCV). The models aim to predict these metrics or a subset of them, with results evaluated using Mean Squared Error (MSE) as the primary performance metric.
+The dataset used in this project consists of historical stock prices for Google (GOOGL) spanning from its IPO on 2004-08-19 to the present, fetched using the yfinance library. The data includes the following features: Open, High, Low, Close, and Volume (OHLCV). The models aim to predict these metrics or a subset of them, with results evaluated using Mean Squared Error (MSE) as the primary performance metric.
 
 The project includes multiple experiments, each designed to test a specific hypothesis or address issues observed in previous experiments.
 
