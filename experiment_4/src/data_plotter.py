@@ -1,43 +1,49 @@
 import pandas as pd
-import matplotlib.pyplot as plt
+from matplotlib import pyplot as plt
+
 
 class DataPlotter:
-    def __init__(self):
-        pass
-
     def create_results_dataframe(self, dates, actuals_original, predictions_original):
         """
-        Create a DataFrame with the test dates and the original-scaled predictions and actuals.
+        Create a DataFrame with dates, actual values, and predicted values.
+
+        Parameters:
+        - dates (list): List of dates.
+        - actuals_original (numpy array): Array of actual values.
+        - predictions_original (numpy array): Array of predicted values.
+
+        Returns:
+        - DataFrame: DataFrame containing dates, actual values, and predicted values.
         """
+        flattened_dates = []
+        flattened_actuals = []
+        flattened_predictions = []
+
+        for i in range(len(dates)):
+            flattened_dates.append(dates[i])  # Append date for each day
+            flattened_actuals.append(actuals_original[i])  # Append actual value
+            flattened_predictions.append(predictions_original[i])  # Append predicted value
+
         df_results = pd.DataFrame({
-            "Date": dates,
-            "Actual_Open": actuals_original[:, 0],
-            "Predicted_Open": predictions_original[:, 0],
-            "Actual_High": actuals_original[:, 1],
-            "Predicted_High": predictions_original[:, 1],
-            "Actual_Low": actuals_original[:, 2],
-            "Predicted_Low": predictions_original[:, 2],
-            "Actual_Close": actuals_original[:, 3],
-            "Predicted_Close": predictions_original[:, 3]
+            'Date': flattened_dates,
+            'Actual': flattened_actuals,
+            'Predicted': flattened_predictions
         })
+
         return df_results
 
     def plot_results(self, df_results):
         """
-        Plot the actual vs. predicted values for Open, High, Low, Close, and Volume.
+        Plot the actual vs. predicted values.
+
+        Parameters:
+        - df_results (DataFrame): DataFrame containing dates, actual values, and predicted values.
         """
-        features = ["Open", "High", "Low", "Close"]
-        fig, axes = plt.subplots(len(features), 1, figsize=(12, 15), sharex=True)
-
-        for i, feature in enumerate(features):
-            axes[i].plot(df_results["Date"], df_results[f"Actual_{feature}"], label=f"Actual {feature}", linestyle="-")
-            axes[i].plot(df_results["Date"], df_results[f"Predicted_{feature}"], label=f"Predicted {feature}", linestyle="--")
-            axes[i].set_title(f"{feature} Price Over Time" if feature != "Volume" else "Volume Over Time")
-            axes[i].legend()
-            axes[i].set_ylabel(feature)
-            axes[i].grid(True)
-
-        # Display date on x-axis for the last subplot only
-        axes[-1].set_xlabel("Date")
-        fig.tight_layout()
+        plt.figure(figsize=(14, 7))
+        plt.plot(df_results['Date'], df_results['Actual'], label='Actual')
+        plt.plot(df_results['Date'], df_results['Predicted'], label='Predicted')
+        plt.xlabel('Date')
+        plt.ylabel('Value')
+        plt.title('Actual vs. Predicted Values')
+        plt.legend()
         plt.show()
