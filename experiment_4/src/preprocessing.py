@@ -17,7 +17,7 @@ class Preprocessing:
         self.folder_path = folder_path
         self.split_ratio = split_ratio
         self.sequence_length = sequence_length
-        self.scaler = MinMaxScaler(feature_range=(-1, 1))
+        self.scaler = MinMaxScaler(feature_range=(0, 1))
 
     def load_data(self):
         """

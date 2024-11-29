@@ -51,12 +51,12 @@ The baseline for this experiment was the variance of the "Close" price in the te
 
 ### Overall Test Loss
 
- - Test Loss: 1.19728
+ - Test Loss: 0.31830
 
 ### Comparison of MSE and Variance for Each Feature
 The performance of the model was evaluated by comparing the Mean Squared Error (MSE) of the predicted values with the Variance of the actual values for the 'Close' feature:
 
-  - Close: MSE = 37.44753, Variance = 0.40440
+  - Close: MSE = 9.95928, Variance = 0.10110
   
   The model's performance was significantly worse compared to the baseline. Despite using a sophisticated architecture with bidirectional LSTMs and an attention mechanism, the predictions were less accurate than a simple mean-based approach.
 
